@@ -5,6 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MyFra - La mia nutrizionista in tasca</title>
     <link rel="icon" type="image/png" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%230F1A33'/><text x='50' y='65' font-size='60' text-anchor='middle' fill='%23E8B49A' font-family='serif'>M</text></svg>">
+    <link rel="manifest" href="data:application/json,{%22name%22:%22MyFra%22,%22short_name%22:%22MyFra%22,%22start_url%22:%22.%22,%22display%22:%22standalone%22,%22theme_color%22:%22%230F1A33%22,%22background_color%22:%22%230F1A33%22,%22icons%22:[{%22src%22:%22data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='100' fill='%230F1A33'/%3E%3Ctext x='256' y='350' font-size='300' text-anchor='middle' fill='%23E8B49A' font-family='serif'%3EM%3C/text%3E%3C/svg%3E%22,%22sizes%22:%22512x512%22,%22type%22:%22image/svg+xml%22}]}">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="MyFra">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Montserrat:wght@300;400;500;600&display=swap');
 
@@ -447,16 +451,16 @@
 
         .admin-filters {
             display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 10px;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 8px;
             margin-bottom: 25px;
         }
 
         .filter-input, .filter-select {
-            padding: 12px;
+            padding: 10px;
             border: 2px solid #f0f0f0;
             border-radius: 10px;
-            font-size: 13px;
+            font-size: 12px;
             font-family: 'Montserrat', sans-serif;
         }
 
@@ -881,7 +885,7 @@
             const programmate = futureApps.filter(r => (r.Stato_visita || 'Programmata') === 'Programmata').length;
             const confermate = futureApps.filter(r => r.Stato_visita === 'Confermata').length;
             const svolte = data.filter(r => r.Stato_visita === 'Svolta').length;
-            const notifiche = data.filter(r => r.Notifica_inviata === 'TRUE' || r.Notifica_inviata === true).length;
+                            const notifiche = data.filter(r => r.Notifica_inviata === 'TRUE' || r.Notifica_inviata === true).length;
 
             let html = `
                 <div class="welcome">
@@ -924,11 +928,6 @@
                         <div class="stat-number">${svolte}</div>
                         <div class="stat-label">🟢 Svolte</div>
                     </div>
-                </div>
-
-                <div class="stat-card" style="margin-bottom:20px; text-align:center;">
-                    <div class="stat-number">${notifiche}</div>
-                    <div class="stat-label">📧 Notifiche inviate</div>
                 </div>
 
                 <div class="admin-filters">
