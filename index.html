@@ -1032,26 +1032,35 @@
         }
 
         function renderMonthView(data) {
-            const now = new Date();
-            const year = now.getFullYear();
-            const month = now.getMonth();
+            if (!window.currentMonth) {
+                window.currentMonth = new Date();
+            }
+            const year = window.currentMonth.getFullYear();
+            const month = window.currentMonth.getMonth();
             const firstDay = new Date(year, month, 1);
             const lastDay = new Date(year, month + 1, 0);
             const daysInMonth = lastDay.getDate();
             const startDay = firstDay.getDay();
 
-            let html = `<h2 class="section-title">📅 ${firstDay.toLocaleDateString('it-IT',{month:'long',year:'numeric'})}</h2>`;
+            let html = `
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+                    <button class="view-btn" onclick="changeMonth(-1)">← Mese prec</button>
+                    <h2 class="section-title" style="margin:0; border:none; padding:0;">${firstDay.toLocaleDateString('it-IT',{month:'long',year:'numeric'})}</h2>
+                    <button class="view-btn" onclick="changeMonth(1)">Mese succ →</button>
+                </div>
+            `;
             html += '<div class="calendar-month"><div class="calendar-header">';
             ['Dom','Lun','Mar','Mer','Gio','Ven','Sab'].forEach(d => html += `<div>${d}</div>`);
             html += '</div><div class="calendar-days">';
 
             for(let i=0; i<startDay; i++) html += '<div class="calendar-day empty"></div>';
             
+            const today = new Date();
             for(let day=1; day<=daysInMonth; day++) {
                 const date = new Date(year, month, day);
                 const dateStr = `${String(day).padStart(2,'0')}/${String(month+1).padStart(2,'0')}/${year}`;
                 const apps = data.filter(r => formatDateSimple(r.Data) === dateStr);
-                const isToday = day === now.getDate() && month === now.getMonth();
+                const isToday = day === today.getDate() && month === today.getMonth() && year === today.getFullYear();
                 
                 html += `<div class="calendar-day ${isToday?'today':''}">
                     <div class="day-number">${day}</div>`;
@@ -1065,30 +1074,54 @@
             document.getElementById('adminContent').innerHTML = html;
         }
 
+        function changeMonth(dir) {
+            window.currentMonth.setMonth(window.currentMonth.getMonth() + dir);
+            renderAdminView('month');
+        }
+
         function renderWeekView(data) {
-            const now = new Date();
-            const startOfWeek = new Date(now);
-            startOfWeek.setDate(now.getDate() - now.getDay() + 1);
+            if (!window.currentWeekStart) {
+                window.currentWeekStart = new Date();
+                window.currentWeekStart.setDate(window.currentWeekStart.getDate() - window.currentWeekStart.getDay() + 1);
+            }
             
-            let html = '<h2 class="section-title">📆 Questa settimana</h2><div class="calendar-week">';
+            const startOfWeek = new Date(window.currentWeekStart);
+            const endOfWeek = new Date(startOfWeek);
+            endOfWeek.setDate(endOfWeek.getDate() + 6);
             
+            let html = `
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+                    <button class="view-btn" onclick="changeWeek(-1)">← Settimana prec</button>
+                    <h2 class="section-title" style="margin:0; border:none; padding:0;">Settimana ${startOfWeek.toLocaleDateString('it-IT',{day:'numeric',month:'short'})} - ${endOfWeek.toLocaleDateString('it-IT',{day:'numeric',month:'short'})}</h2>
+                    <button class="view-btn" onclick="changeWeek(1)">Settimana succ →</button>
+                </div>
+            `;
+            html += '<div class="calendar-week">';
+            
+            const today = new Date();
             for(let i=0; i<7; i++) {
                 const day = new Date(startOfWeek);
                 day.setDate(startOfWeek.getDate() + i);
                 const dateStr = formatDateSimple2(day);
                 const apps = data.filter(r => formatDateSimple(r.Data) === dateStr);
-                const isToday = day.toDateString() === now.toDateString();
+                const isToday = day.toDateString() === today.toDateString();
                 
                 html += `<div class="week-day ${isToday?'today':''}">
-                    <div class="week-day-header">${day.toLocaleDateString('it-IT',{weekday:'short',day:'numeric'})}</div>`;
+                    <div class="week-day-header">${day.toLocaleDateString('it-IT',{weekday:'short',day:'numeric',month:'short'})}</div>`;
                 apps.sort((a,b)=>a.Ora.localeCompare(b.Ora)).forEach(a => {
                     const color = {'Programmata':'yellow','Confermata':'blue','Svolta':'green','Annullata':'red'}[a.Stato_visita||'Programmata']||'yellow';
-                    html += `<div class="week-event ${color}">${a.Ora} ${a.Nome} ${a.Cognome}</div>`;
+                    const notifica = (a.Notifica_inviata === 'TRUE' || a.Notifica_inviata === true) ? ' ✓' : '';
+                    html += `<div class="week-event ${color}">${a.Ora} ${a.Nome}${notifica}</div>`;
                 });
                 html += '</div>';
             }
             html += '</div>';
             document.getElementById('adminContent').innerHTML = html;
+        }
+
+        function changeWeek(dir) {
+            window.currentWeekStart.setDate(window.currentWeekStart.getDate() + (dir * 7));
+            renderAdminView('week');
         }
 
         function renderDayView(data) {
