@@ -1,7 +1,7 @@
 {
   "name": "MyFra",
   "short_name": "MyFra",
-  "start_url": ".",
+  "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#0F1A33",
   "theme_color": "#0F1A33",
