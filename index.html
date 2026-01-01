@@ -27,7 +27,7 @@ const WHATSAPP='393349174413';
 const PIN_MASTER='MF-ADMIN';
 const urlParams=new URLSearchParams(window.location.search);
 const userPIN=urlParams.get('pin');
-if (!pin) {
+if (!PIN) {
   showLogin();
 }
 function checkPIN(){const stored=localStorage.getItem('myfra_pin');const storedCode=localStorage.getItem('myfra_code');if(stored&&storedCode&&stored===userPIN){loadData()}else if(stored&&stored!==userPIN){showPINModal('Questo dispositivo è collegato a un altro account. Inserisci il codice di sicurezza:',true)}else{showPINModal('Benvenuto! Per sicurezza, scegli un codice di 4 cifre:',false)}}
