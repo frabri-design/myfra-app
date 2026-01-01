@@ -27,7 +27,9 @@ const WHATSAPP='393349174413';
 const PIN_MASTER='MF-ADMIN';
 const urlParams=new URLSearchParams(window.location.search);
 const userPIN=urlParams.get('pin');
-if(!userPIN){showError('Link non valido. Contatta la Dott.ssa per ricevere il tuo link personale.')}else{checkPIN()}
+if (!pin) {
+  showLogin();
+}
 function checkPIN(){const stored=localStorage.getItem('myfra_pin');const storedCode=localStorage.getItem('myfra_code');if(stored&&storedCode&&stored===userPIN){loadData()}else if(stored&&stored!==userPIN){showPINModal('Questo dispositivo è collegato a un altro account. Inserisci il codice di sicurezza:',true)}else{showPINModal('Benvenuto! Per sicurezza, scegli un codice di 4 cifre:',false)}}
 function showPINModal(message,isVerify){const modal=document.createElement('div');modal.className='pin-modal';modal.innerHTML=`<div class="pin-modal-content"><h2>🔒 Codice di sicurezza</h2><p>${message}</p><input type="number" class="pin-input" maxlength="4" placeholder="••••" id="pinInput"><button class="btn btn-confirm" onclick="verifyPIN(${isVerify})">Conferma</button></div>`;document.body.appendChild(modal);document.getElementById('pinInput').focus()}
 function verifyPIN(isVerify){const input=document.getElementById('pinInput').value;if(input.length!==4){alert('Inserisci un codice di 4 cifre');return}if(isVerify){const stored=localStorage.getItem('myfra_code');if(input===stored){localStorage.setItem('myfra_pin',userPIN);document.querySelector('.pin-modal').remove();loadData()}else{alert('Codice errato')}}else{localStorage.setItem('myfra_pin',userPIN);localStorage.setItem('myfra_code',input);document.querySelector('.pin-modal').remove();loadData()}}
