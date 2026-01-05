@@ -51,14 +51,20 @@ const WHATSAPP='393349174413';
 const PIN_MASTER='MF-ADMIN';
 function getPin() {
   const urlParams = new URLSearchParams(window.location.search);
-  const urlPin = urlParams.get("pin");
+  let urlPin = urlParams.get("pin");
 
+  // Pulisci il PIN rimuovendo caratteri extra
   if (urlPin) {
+    urlPin = urlPin.trim().split(':')[0]; // Rimuove tutto dopo ":"
     localStorage.setItem("myfra_pin", urlPin);
     return urlPin;
   }
 
-  return localStorage.getItem("myfra_pin");
+  let stored = localStorage.getItem("myfra_pin");
+  if (stored) {
+    stored = stored.trim().split(':')[0]; // Pulisci anche il PIN salvato
+  }
+  return stored;
 }
 let userPIN = null;
 function checkPIN(){const stored=localStorage.getItem('myfra_pin');const storedCode=localStorage.getItem('myfra_code');if(stored&&storedCode&&stored===userPIN){loadData()}else if(stored&&stored!==userPIN){showPINModal('Questo dispositivo è collegato a un altro account. Inserisci il codice di sicurezza:',true)}else{showPINModal('Benvenuto! Per sicurezza, scegli un codice di 4 cifre:',false)}}
