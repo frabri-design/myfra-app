@@ -148,7 +148,27 @@ function formatDateForAPI(dateString) {
 }
 function showError(msg){document.getElementById('app').innerHTML=`<div class="error">⚠️ ${msg}</div><a href="https://wa.me/${WHATSAPP}" class="btn btn-whatsapp">💬 Contatta su WhatsApp</a>`}
 window.onload = () => {
+  // 1️⃣ PULIZIA URL IMMEDIATA - prima di tutto
+  const params = new URLSearchParams(window.location.search);
+  let rawPin = params.get("pin");
+
+  if (rawPin && rawPin.includes(":")) {
+    const cleanPin = rawPin.split(":")[0];
+    history.replaceState({}, "", "?pin=" + encodeURIComponent(cleanPin));
+    // Forza il nuovo valore nell'URL
+    window.location.search = "?pin=" + encodeURIComponent(cleanPin);
+  }
+
+  // 2️⃣ Ora leggiamo il PIN pulito
   userPIN = getPin();
+
+  if (!userPIN) {
+    showError("Link non valido o PIN mancante.");
+    return;
+  }
+
+  checkPIN();
+};
   
   // FORZA PULIZIA PIN - rimuove tutto dopo ":"
   if (userPIN && userPIN.includes(':')) {
