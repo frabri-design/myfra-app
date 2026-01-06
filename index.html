@@ -49,6 +49,16 @@
 const SHEET_URL='https://docs.google.com/spreadsheets/d/e/2PACX-1vQf5AVWZ2sGxpzEJKgBwUMi2tIenesth7O6RDE90zhck0b-s6T3vLYtFP0Y_-URvkFPFT9RWfyJJIGp/pub?gid=2027498395&single=true&output=csv';
 const WHATSAPP='393349174413';
 const PIN_MASTER='MF-ADMIN';
+        // PULIZIA URL IMMEDIATA - eseguita PRIMA di tutto
+(function() {
+  const params = new URLSearchParams(window.location.search);
+  const pin = params.get("pin");
+  if (pin && (pin.includes(":") || pin.includes("#") || pin.includes("&"))) {
+    const cleanPin = pin.split(":")[0].split("#")[0].split("&")[0];
+    const newUrl = window.location.pathname + "?pin=" + encodeURIComponent(cleanPin);
+    window.history.replaceState({}, "", newUrl);
+  }
+})();
 function getPin() {
   const urlParams = new URLSearchParams(window.location.search);
   let urlPin = urlParams.get("pin");
