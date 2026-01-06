@@ -53,16 +53,19 @@ function getPin() {
   const urlParams = new URLSearchParams(window.location.search);
   let urlPin = urlParams.get("pin");
 
-  // Pulisci il PIN rimuovendo caratteri extra
+  // Pulisci il PIN rimuovendo TUTTO dopo :
   if (urlPin) {
-    urlPin = urlPin.trim().split(':')[0]; // Rimuove tutto dopo ":"
+    // Rimuovi spazi, : e tutto quello che segue
+    urlPin = urlPin.trim().split(':')[0].split('#')[0].split('&')[0];
     localStorage.setItem("myfra_pin", urlPin);
     return urlPin;
   }
 
   let stored = localStorage.getItem("myfra_pin");
   if (stored) {
-    stored = stored.trim().split(':')[0]; // Pulisci anche il PIN salvato
+    // Pulisci anche il PIN salvato
+    stored = stored.trim().split(':')[0].split('#')[0].split('&')[0];
+    localStorage.setItem("myfra_pin", stored); // Risalva pulito
   }
   return stored;
 }
