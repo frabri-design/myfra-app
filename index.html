@@ -24,17 +24,30 @@
       },
     });
   });
-
-  // FUNZIONE PER TAGGARE L'UTENTE CON IL PIN
-  async function tagUserWithPIN(pin) {
-    try {
+// FUNZIONE PER TAGGARE L'UTENTE CON IL PIN
+async function tagUserWithPIN(pin) {
+  try {
+    // 1. Chiedi permesso notifiche (se non già fatto)
+    const permission = await OneSignal.Notifications.requestPermission();
+    
+    if (permission) {
+      // 2. Login con External ID
       await OneSignal.login(pin);
+      
+      // 3. Aggiungi tag
       await OneSignal.User.addTag("pin", pin);
-      console.log("✅ Tag PIN aggiunto:", pin);
-    } catch (error) {
-      console.error("❌ Errore tagging:", error);
+      
+      // 4. Opt-in esplicito
+      await OneSignal.User.PushSubscription.optIn();
+      
+      console.log("✅ Tag PIN aggiunto e subscription attivata:", pin);
+    } else {
+      console.warn("⚠️ Permesso notifiche negato");
     }
+  } catch (error) {
+    console.error("❌ Errore tagging:", error);
   }
+}
 </script>
 </head>
 <body>
