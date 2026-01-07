@@ -19,35 +19,23 @@
     await OneSignal.init({
       appId: "75e0bd3e-553b-4b0f-accc-35ba17582b41",
       safari_web_id: "web.onesignal.auto.4924b4f0-134c-425c-876d-dc71d8371c02",
-      notifyButton: {
-        enable: true,
-      },
+      allowLocalhostAsSecureOrigin: true,
     });
+
+    // Aspetta che OneSignal sia pronto
+    await OneSignal.Slidedown.promptPush();
   });
-// FUNZIONE PER TAGGARE L'UTENTE CON IL PIN
-async function tagUserWithPIN(pin) {
-  try {
-    // 1. Chiedi permesso notifiche (se non già fatto)
-    const permission = await OneSignal.Notifications.requestPermission();
-    
-    if (permission) {
-      // 2. Login con External ID
+
+  // FUNZIONE PER TAGGARE L'UTENTE CON IL PIN
+  async function tagUserWithPIN(pin) {
+    try {
       await OneSignal.login(pin);
-      
-      // 3. Aggiungi tag
       await OneSignal.User.addTag("pin", pin);
-      
-      // 4. Opt-in esplicito
-      await OneSignal.User.PushSubscription.optIn();
-      
-      console.log("✅ Tag PIN aggiunto e subscription attivata:", pin);
-    } else {
-      console.warn("⚠️ Permesso notifiche negato");
+      console.log("✅ Utente taggato:", pin);
+    } catch (error) {
+      console.error("❌ Errore tagging:", error);
     }
-  } catch (error) {
-    console.error("❌ Errore tagging:", error);
   }
-}
 </script>
 </head>
 <body>
