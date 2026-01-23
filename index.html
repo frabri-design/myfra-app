@@ -183,15 +183,22 @@ function showError(msg){document.getElementById('app').innerHTML=`<div class="er
 window.onload = () => {
   userPIN = getPin();
   
-  // FORZA PULIZIA PIN - rimuove tutto dopo ":"
+  // Pulizia PIN
   if (userPIN && userPIN.includes(':')) {
     userPIN = userPIN.split(':')[0];
     localStorage.setItem("myfra_pin", userPIN);
   }
   
+  // Se non c'è PIN nell'URL ma c'è in localStorage, usalo
   if (!userPIN) {
-    showError("Link non valido o PIN mancante.");
-    return;
+    const savedPIN = localStorage.getItem("myfra_pin");
+    if (savedPIN) {
+      userPIN = savedPIN;
+      console.log("✅ PIN recuperato da localStorage:", userPIN);
+    } else {
+      showError("Link non valido o PIN mancante. Apri il link che ti è stato inviato via WhatsApp.");
+      return;
+    }
   }
   
   checkPIN();
