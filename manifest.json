@@ -1,7 +1,7 @@
 {
-  "name": "MyFra",
+  "name": "MyFra - La mia nutrizionista in tasca",
   "short_name": "MyFra",
-  "start_url": "./index.html",
+  "start_url": "/myfra-app/?source=pwa",
   "display": "standalone",
   "background_color": "#0F1A33",
   "theme_color": "#0F1A33",
