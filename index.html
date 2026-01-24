@@ -116,7 +116,7 @@ function renderPatient(data){
   : `<div class="appointment-date badge-nodate">📌 Da fissare</div>`
 }
 </div><div class="appointment-time">🕒 ${a.Ora}</div><div class="appointment-location">📍 ${a.Centro}</div> ${!confirmed?`<button class="btn btn-confirm" onclick="confirm('${a.Data}')">✓ Conferma</button>`:''} <a href="https://wa.me/${WHATSAPP}?text=Salve%20Dott.ssa%2C%20riguardo%20l%27appuntamento%20di%20${encodeURIComponent(formatDate(a.Data))}" class="btn btn-whatsapp">💬 Modifica/Annulla</a></div>`})}else{
-  }else if(stato!=='Concluso'){
+  if(stato!=='Concluso'){
   html+=`<div class="status-card">
     <div class="status-icon">📅</div>
     <div class="status-title">Nessun appuntamento programmato</div>
