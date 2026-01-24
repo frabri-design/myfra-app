@@ -172,7 +172,7 @@ function renderListView(data){
       const {color, icon}=getColorAndIcon(stato, statoPaz);
       const notifica=app.Notifica_inviata==='TRUE'||app.Notifica_inviata===true;
       const dataObj = parseDate(app.Data);
-const dataDisplay = statoPaz === 'Concluso' ? '' : (dataObj.getFullYear() === 1970 ? 'Da fissare' : formatDate(app.Data));
+const dataDisplay = dataObj.getFullYear() === 1970 ? 'Da fissare' : formatDate(app.Data);
       
       html+=`<div class="admin-appointment-card ${color}">
         <div class="admin-app-header">
