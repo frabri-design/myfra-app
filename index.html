@@ -122,7 +122,7 @@ function renderPatient(data){
     <div class="status-message">Quando vorrai fissare la prossima visita, puoi contattarmi su <a href="https://wa.me/${WHATSAPP}">WhatsApp</a>!</div>
   </div>`;
 }if(past.length){html+='<h2 class="section-title">📋 Storico visite</h2>';past.slice(0,5).forEach(a=>{html+=`<div class="appointment-card"><span class="appointment-badge badge-completed">✓ Completata</span><div class="appointment-date">${formatDate(a.Data)}</div><div class="appointment-time">🕒 ${a.Ora}</div><div class="appointment-location">📍 ${a.Centro}</div></div>`})}html+=`<div class="space-myfra"><h3>📱 Spazio MyFra</h3><div class="social-links"><a href="https://sites.google.com/view/dottssafrancescabriscia/home-page" target="_blank" class="social-link">🌐 Sito web</a><a href="https://sites.google.com/view/dottssafrancescabriscia/approfondimenti" target="_blank" class="social-link">📚 Fra-day flash</a><a href="https://www.facebook.com/share/15GkqfbzyJ/" target="_blank" class="social-link">📘 Facebook</a><a href="https://www.instagram.com/dottssafrancescabriscia" target="_blank" class="social-link">📷 Instagram</a><a href="https://wa.me/${WHATSAPP}" target="_blank" class="social-link full-width">💬 WhatsApp</a></div></div><div class="footer"><strong>© 2026 Dott.ssa Francesca Briscia</strong>Tutti i diritti riservati<br>I tuoi dati sono protetti e non saranno condivisi con terzi.<br>Privacy garantita.</div>`;document.getElementById('app').innerHTML=html}
-function renderAdmin(data){const today=new Date();today.setHours(0,0,0,0);const uniquePatients=[...new Set(data.map(r=>r.PIN))];const attivi=uniquePatients.filter(pin=>{const paziente=data.find(r=>r.PIN===pin);return(paziente.Stato_paziente||'Attivo')==='Attivo'}).length;const conclusi=uniquePatients.filter(pin=>{const paziente=data.find(r=>r.PIN===pin);return paziente.Stato_paziente==='Concluso'}).length;const sospesi=uniquePatients.filter(pin=>{const paziente=data.find(r=>r.PIN===pin);return paziente.Stato_paziente==='Sospeso'}).length;const futureApps=data.filter(r=>parseDate(r.Data)>=today);const programmate=futureApps.filter(r=>(r.Stato_visita||'Programmata')==='Programmata').length;const svolte=data.filter(r=>r.Stato_visita==='Svolta').length;const totApps=programmate+svolte;const percCompletion=totApps>0?Math.round((svolte/totApps)*100):0;let html=`<div class="welcome"><h2>👩🏻‍⚕️ Dashboard Admin</h2><p>Benvenuta Dott.ssa Briscia</p></div><div class="admin-stats"><div class="stat-card"><div class="stat-number">${attivi}</div><div class="stat-label">Pazienti Attivi</div></div><div class="stat-card"><div class="stat-number">${conclusi}</div><div class="stat-label">Conclusi</div></div><div class="stat-card"><div class="stat-number">${sospesi}</div><div class="stat-label">Sospesi</div></div></div><div class="admin-stats"><div class="stat-card yellow"><div class="stat-number">${programmate}</div><div class="stat-label">🟡 Programmate</div></div><div class="stat-card green"><div class="stat-number">${svolte}</div><div class="stat-label">🟢 Svolte</div></div></div><div class="completion-card"><div class="stat-number">${percCompletion}%</div><div class="stat-label">Tasso completamento visite</div></div><div class="admin-filters"><input type="text" id="searchPatient" placeholder="🔍 Cerca paziente..." class="filter-input"><select id="filterCentro" class="filter-select"><option value="">Tutti i centri${[...new Set(data.map(r=>r.Centro))].filter(c=>c).map(c=>`<option value="${c}">${c}</option>`).join('')}</option></select><select id="filterStato" class="filter-select"><option value="">Tutti gli stati</option><option value="Programmata">🟡 Programmata</option><option value="Confermata">🔵 Confermata</option><option value="Svolta">🟢 Svolta</option><option value="Annullata">🔴 Annullata</option></select></div></select></div><div class="admin-view-switch"><button class="view-btn active" onclick="switchView('list')">📋 Lista</button><button class="view-btn" onclick="switchView('month')">📅 Mese</button><button class="view-btn" onclick="switchView('week')">📆 Settimana</button><button class="view-btn" onclick="switchView('day')">📄 Giorno</button></div><div id="adminContent"></div>`;document.getElementById('app').innerHTML=html;window.adminData=data;window.currentView='list';window.currentMonth=new Date();window.currentWeekStart=new Date();window.currentWeekStart.setDate(window.currentWeekStart.getDate()-window.currentWeekStart.getDay()+1);renderAdminView('list');document.getElementById('searchPatient').addEventListener('input',()=>renderAdminView(window.currentView));document.getElementById('filterCentro').addEventListener('change',()=>renderAdminView(window.currentView))}
+function renderAdmin(data){const today=new Date();today.setHours(0,0,0,0);const uniquePatients=[...new Set(data.map(r=>r.PIN))];const attivi=uniquePatients.filter(pin=>{const paziente=data.find(r=>r.PIN===pin);return(paziente.Stato_paziente||'Attivo')==='Attivo'}).length;const conclusi=uniquePatients.filter(pin=>{const paziente=data.find(r=>r.PIN===pin);return paziente.Stato_paziente==='Concluso'}).length;const sospesi=uniquePatients.filter(pin=>{const paziente=data.find(r=>r.PIN===pin);return paziente.Stato_paziente==='Sospeso'}).length;const futureApps=data.filter(r=>parseDate(r.Data)>=today);const programmate=futureApps.filter(r=>(r.Stato_visita||'Programmata')==='Programmata').length;let html=`<div class="welcome"><h2>👩🏻‍⚕️ Dashboard Admin</h2><p>Benvenuta Dott.ssa Briscia</p></div><div class="admin-stats"><div class="stat-card"><div class="stat-number">${attivi}</div><div class="stat-label">Pazienti Attivi</div></div><div class="stat-card"><div class="stat-number">${conclusi}</div><div class="stat-label">Conclusi</div></div><div class="stat-card"><div class="stat-number">${sospesi}</div><div class="stat-label">Sospesi</div></div></div><div class="admin-stats"><div class="stat-card yellow"><div class="stat-number">${programmate}</div><div class="stat-label">🟡 Programmate</div></div></div><div class="admin-filters"><input type="text" id="searchPatient" placeholder="🔍 Cerca paziente..." class="filter-input"><select id="filterCentro" class="filter-select"><option value="">Tutti i centri${[...new Set(data.map(r=>r.Centro))].filter(c=>c).map(c=>`<option value="${c}">${c}</option>`).join('')}</option></select><select id="filterStato" class="filter-select"><option value="">Tutti gli stati</option><option value="Programmata">🟡 Programmata</option><option value="Confermata">🔵 Confermata</option><option value="Svolta">🟢 Svolta</option><option value="Annullata">🔴 Annullata</option></select></div></select></div><div class="admin-view-switch"><button class="view-btn active" onclick="switchView('list')">📋 Lista</button><button class="view-btn" onclick="switchView('month')">📅 Mese</button><button class="view-btn" onclick="switchView('week')">📆 Settimana</button><button class="view-btn" onclick="switchView('day')">📄 Giorno</button></div><div id="adminContent"></div>`;document.getElementById('app').innerHTML=html;window.adminData=data;window.currentView='list';window.currentMonth=new Date();window.currentWeekStart=new Date();window.currentWeekStart.setDate(window.currentWeekStart.getDate()-window.currentWeekStart.getDay()+1);renderAdminView('list');document.getElementById('searchPatient').addEventListener('input',()=>renderAdminView(window.currentView));document.getElementById('filterCentro').addEventListener('change',()=>renderAdminView(window.currentView))}
 function switchView(view){window.currentView=view;document.querySelectorAll('.view-btn').forEach(btn=>btn.classList.remove('active'));event.target.classList.add('active');renderAdminView(view)}
 function renderAdminView(view){const data=window.adminData;const search=document.getElementById('searchPatient')?.value.toLowerCase()||'';const centro=document.getElementById('filterCentro')?.value;document.getElementById('filterStato').addEventListener('change',()=>renderAdminView(window.currentView))||'';const stato=document.getElementById('filterStato')?.value||'';let filtered=data.filter(r=>{const matchSearch=!search||(r.Nome||'').toLowerCase().includes(search)||(r.Cognome||'').toLowerCase().includes(search)||(r.PIN||'').toLowerCase().includes(search);const matchCentro=!centro||r.Centro===centro;const matchStato=!stato||(r.Stato_visita||'Programmata')===stato;return matchSearch&&matchCentro&&matchStato});;if(view==='list'){renderListView(filtered)}else if(view==='month'){renderMonthView(filtered)}else if(view==='week'){renderWeekView(filtered)}else if(view==='day'){renderDayView(filtered)}}
 function getColorAndIcon(statoVisita, statoPaziente){
@@ -137,42 +137,60 @@ function getColorAndIcon(statoVisita, statoPaziente){
 function renderListView(data){
   // Ordina per priorità personalizzata
   data.sort((a, b) => {
-    // PRIORITÀ PAZIENTE
     const priority = (row) => {
-      // 1️⃣ Da fissare ATTIVI = ARANCIONI
       if (row.Stato_visita === 'Da fissare' && row.Stato_paziente === 'Attivo') return 1;
-      
-      // 2️⃣ Programmati/Confermati = GIALLI/BLU (in ordine cronologico)
       if (row.Stato_visita === 'Programmata' || row.Stato_visita === 'Confermata') return 2;
-      
-      // 3️⃣ Da fissare SOSPESI = ROSSI
       if (row.Stato_visita === 'Da fissare' && row.Stato_paziente === 'Sospeso') return 3;
-      
-      // 4️⃣ Conclusi = VERDI
       if (row.Stato_paziente === 'Concluso') return 4;
-      
-      // Default
       return 5;
     };
     
     const pDiff = priority(a) - priority(b);
     if (pDiff !== 0) return pDiff;
     
-    // A PARITÀ DI PRIORITÀ → DATA (solo per Programmati/Confermati)
     const dateA = parseDate(a.Data);
     const dateB = parseDate(b.Data);
     
-    // Escludi date 1970 dal sorting cronologico
     if (dateA.getFullYear() !== 1970 && dateB.getFullYear() !== 1970) {
       const dDiff = dateA - dateB;
       if (dDiff !== 0) return dDiff;
     }
     
-    // A PARITÀ DI DATA → ORA
     return (a.Ora || '00:00').localeCompare(b.Ora || '00:00');
   });
 
-  let html='<h2 class="section-title">📋 Lista appuntamenti</h2>';if(data.length===0){html+='<div class="empty-state">Nessun appuntamento trovato</div>'}else{data.forEach(app=>{const stato=app.Stato_visita||'Programmata';const statoPaz=app.Stato_paziente||'Attivo';const {color, icon}=getColorAndIcon(stato, statoPaz);const notifica=app.Notifica_inviata==='TRUE'||app.Notifica_inviata===true;html+=`<div class="admin-appointment-card ${color}><div class="admin-app-header"><div class="admin-app-patient">${app.Nome} ${app.Cognome}</div><div class="admin-app-status">${icon} ${stato}</div></div><div class="admin-app-details"><div>📅 ${parseDate(app.Data).getFullYear()===1970?'Da fissare':formatDate(app.Data)}</div><div>🕒 ${app.Ora}</div><div>📍 ${app.Centro}</div><div>🆔 ${app.PIN}</div>${notifica?'<div style="grid-column:1/-1;">📧 Notifica inviata ✓</div>':''}</div>${app.Conferma_appuntamento==='TRUE'?'<div style="margin-top:10px;padding:8px;background:#E3F2FD;border-radius:8px;font-size:12px;color:#1976D2;">✓ Confermato</div>':''}</div>`})}document.getElementById('adminContent').innerHTML=html}
+  let html='<h2 class="section-title">📋 Lista appuntamenti</h2>';
+  
+  if(data.length===0){
+    html+='<div class="empty-state">Nessun appuntamento trovato</div>';
+  } else {
+    data.forEach(app=>{
+      const stato=app.Stato_visita||'Programmata';
+      const statoPaz=app.Stato_paziente||'Attivo';
+      const {color, icon}=getColorAndIcon(stato, statoPaz);
+      const notifica=app.Notifica_inviata==='TRUE'||app.Notifica_inviata===true;
+      const dataObj = parseDate(app.Data);
+      const dataDisplay = dataObj.getFullYear() === 1970 ? 'Da fissare' : formatDate(app.Data);
+      
+      html+=`<div class="admin-appointment-card ${color}">
+        <div class="admin-app-header">
+          <div class="admin-app-patient">${app.Nome} ${app.Cognome}</div>
+          <div class="admin-app-status">${icon} ${stato}</div>
+        </div>
+        <div class="admin-app-details">
+          <div>📅 ${dataDisplay}</div>
+          <div>🕒 ${app.Ora}</div>
+          <div>📍 ${app.Centro}</div>
+          <div>🆔 ${app.PIN}</div>
+          ${notifica?'<div style="grid-column:1/-1;">📧 Notifica inviata ✓</div>':''}
+        </div>
+        ${app.Conferma_appuntamento==='TRUE'?'<div style="margin-top:10px;padding:8px;background:#E3F2FD;border-radius:8px;font-size:12px;color:#1976D2;">✓ Confermato</div>':''}
+      </div>`;
+    });
+  }
+  
+  document.getElementById('adminContent').innerHTML=html;
+}
 function renderMonthView(data){if(!window.currentMonth){window.currentMonth=new Date()}const year=window.currentMonth.getFullYear();const month=window.currentMonth.getMonth();const firstDay=new Date(year,month,1);const lastDay=new Date(year,month+1,0);const daysInMonth=lastDay.getDate();const startDay=firstDay.getDay();let html=`<div class="calendar-nav"><button class="nav-btn" onclick="changeMonth(-1)">← Prec</button><h3>${firstDay.toLocaleDateString('it-IT',{month:'long',year:'numeric'})}</h3><button class="nav-btn" onclick="changeMonth(1)">Succ →</button></div><div class="calendar-month"><div class="calendar-header">`;['Dom','Lun','Mar','Mer','Gio','Ven','Sab'].forEach(d=>html+=`<div>${d}</div>`);html+='</div><div class="calendar-days">';for(let i=0;i<startDay;i++)html+='<div class="calendar-day empty"></div>';const today=new Date();for(let day=1;day<=daysInMonth;day++){const date=new Date(year,month,day);const dateStr=`${String(day).padStart(2,'0')}/${String(month+1).padStart(2,'0')}/${year}`;const apps=data.filter(r=>formatDateSimple(r.Data)===dateStr);const isToday=day===today.getDate()&&month===today.getMonth()&&year===today.getFullYear();html+=`<div class="calendar-day ${isToday?'today':''}"><div class="day-number">${day}</div>`;apps.sort((a,b)=>(a.Ora||'00:00').localeCompare(b.Ora||'00:00')).forEach(a=>{const color={'Programmata':'yellow','Confermata':'blue','Svolta':'green','Annullata':'red'}[a.Stato_visita||'Programmata']||'yellow';html+=`<div class="cal-event ${color}">${a.Ora} ${a.Nome} ${a.Cognome}</div>`});html+='</div>'}html+='</div></div>';document.getElementById('adminContent').innerHTML=html}
 function changeMonth(dir){window.currentMonth.setMonth(window.currentMonth.getMonth()+dir);renderAdminView('month')}
 function renderWeekView(data){if(!window.currentWeekStart){window.currentWeekStart=new Date();window.currentWeekStart.setDate(window.currentWeekStart.getDate()-window.currentWeekStart.getDay()+1)}const startOfWeek=new Date(window.currentWeekStart);const endOfWeek=new Date(startOfWeek);endOfWeek.setDate(endOfWeek.getDate()+6);let html=`<div class="calendar-nav"><button class="nav-btn" onclick="changeWeek(-1)">← Prec</button><h3>Settimana ${startOfWeek.toLocaleDateString('it-IT',{day:'numeric',month:'short'})} - ${endOfWeek.toLocaleDateString('it-IT',{day:'numeric',month:'short'})}</h3><button class="nav-btn" onclick="changeWeek(1)">Succ →</button></div><div class="calendar-week">`;const today=new Date();for(let i=0;i<7;i++){const day=new Date(startOfWeek);day.setDate(startOfWeek.getDate()+i);const dateStr=formatDateSimple2(day);const apps=data.filter(r=>formatDateSimple(r.Data)===dateStr);const isToday=day.toDateString()===today.toDateString();html+=`<div class="week-day ${isToday?'today':''}"><div class="week-day-header">${day.toLocaleDateString('it-IT',{weekday:'short',day:'numeric',month:'short'})}</div>`;apps.sort((a,b)=>a.Ora.localeCompare(b.Ora)).forEach(a=>{const color={'Programmata':'yellow','Confermata':'blue','Svolta':'green','Annullata':'red'}[a.Stato_visita||'Programmata']||'yellow';const notifica=(a.Notifica_inviata==='TRUE'||a.Notifica_inviata===true)?' ✓':'';html+=`<div class="week-event ${color}">${a.Ora} ${a.Nome} ${a.Cognome}${notifica}</div>`});html+='</div>'}html+='</div>';document.getElementById('adminContent').innerHTML=html}
