@@ -116,6 +116,7 @@ function renderPatient(data){
   : `<div class="appointment-date badge-nodate">📌 Da fissare</div>`
 }
 </div><div class="appointment-time">🕒 ${a.Ora}</div><div class="appointment-location">📍 ${a.Centro}</div> ${!confirmed?`<button class="btn btn-confirm" onclick="confirm('${a.Data}')">✓ Conferma</button>`:''} <a href="https://wa.me/${WHATSAPP}?text=Salve%20Dott.ssa%2C%20riguardo%20l%27appuntamento%20di%20${encodeURIComponent(formatDate(a.Data))}" class="btn btn-whatsapp">💬 Modifica/Annulla</a></div>`})}else{
+  }else if(stato!=='Concluso'){
   html+=`<div class="status-card">
     <div class="status-icon">📅</div>
     <div class="status-title">Nessun appuntamento programmato</div>
@@ -170,15 +171,16 @@ function renderListView(data){
       const {color, icon}=getColorAndIcon(stato, statoPaz);
       const notifica=app.Notifica_inviata==='TRUE'||app.Notifica_inviata===true;
       const dataObj = parseDate(app.Data);
-      const dataDisplay = dataObj.getFullYear() === 1970 ? 'Da fissare' : formatDate(app.Data);
-      
-      html+=`<div class="admin-appointment-card ${color}">
-        <div class="admin-app-header">
-          <div class="admin-app-patient">${app.Nome} ${app.Cognome}</div>
-          <div class="admin-app-status">${icon} ${stato}</div>
-        </div>
-        <div class="admin-app-details">
-          <div>📅 ${dataDisplay}</div>
+const dataDisplay = dataObj.getFullYear() === 1970 ? 'Da fissare' : formatDate(app.Data);
+const mostraData = statoPaz !== 'Concluso';
+
+html+=`<div class="admin-appointment-card ${color}">
+  <div class="admin-app-header">
+    <div class="admin-app-patient">${app.Nome} ${app.Cognome}</div>
+    <div class="admin-app-status">${icon} ${stato}</div>
+  </div>
+  <div class="admin-app-details">
+    ${mostraData ? `<div>📅 ${dataDisplay}</div>` : ''}
           <div>🕒 ${app.Ora}</div>
           <div>📍 ${app.Centro}</div>
           <div>🆔 ${app.PIN}</div>
