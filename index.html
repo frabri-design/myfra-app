@@ -177,20 +177,6 @@ function renderListView(data){
 const dataDisplay = dataObj.getFullYear() === 1970 ? 'Da fissare' : formatDate(app.Data);
 const mostraData = statoPaz !== 'Concluso';
 
-html+=`<div class="admin-appointment-card ${color}">
-  <div class="admin-app-header">
-    <div class="admin-app-patient">${app.Nome} ${app.Cognome}</div>
-    <div class="admin-app-status">${icon} ${stato}</div>
-  </div>
-  <div class="admin-app-details">
-    ${mostraData ? `<div>📅 ${dataDisplay}</div>` : ''}
-          <div>🕒 ${app.Ora}</div>
-          <div>${app.Centro}</div>
-          <div>🆔 ${app.PIN}</div>
-          ${notifica?'<div style="grid-column:1/-1;">📧 Notifica inviata ✓</div>':''}
-        </div>
-        ${app.Conferma_appuntamento==='TRUE'?'<div style="margin-top:10px;padding:8px;background:#E3F2FD;border-radius:8px;font-size:12px;color:#1976D2;">✓ Confermato</div>':''}
-      </div>`;
  html+=`<div class="admin-appointment-card ${color}">
   <div class="admin-app-header">
     <div class="admin-app-patient">${app.Nome} ${app.Cognome}</div>
@@ -199,7 +185,7 @@ html+=`<div class="admin-appointment-card ${color}">
   <div class="admin-app-details">
     ${mostraData ? `<div>📅 ${dataDisplay}</div>` : ''}
     <div>🕒 ${app.Ora}</div>
-    <div>📍 ${app.Centro}</div>
+    <div>${app.Centro}</div>
     <div>🆔 ${app.PIN}</div>
     ${notifica?'<div style="grid-column:1/-1;">📧 Notifica inviata ✓</div>':''}
   </div>
