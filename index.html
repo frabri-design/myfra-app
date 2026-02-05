@@ -191,12 +191,7 @@ html+=`<div class="admin-appointment-card ${color}">
         </div>
         ${app.Conferma_appuntamento==='TRUE'?'<div style="margin-top:10px;padding:8px;background:#E3F2FD;border-radius:8px;font-size:12px;color:#1976D2;">✓ Confermato</div>':''}
       </div>`;
-    });
-  }
-  document.getElementById('adminContent').innerHTML=html;
-  }
-
-html+=`<div class="admin-appointment-card ${color}">
+ html+=`<div class="admin-appointment-card ${color}">
   <div class="admin-app-header">
     <div class="admin-app-patient">${app.Nome} ${app.Cognome}</div>
     <div class="admin-app-status">${icon} ${stato}</div>
@@ -204,13 +199,18 @@ html+=`<div class="admin-appointment-card ${color}">
   <div class="admin-app-details">
     ${mostraData ? `<div>📅 ${dataDisplay}</div>` : ''}
     <div>🕒 ${app.Ora}</div>
-    <div>${app.Centro}</div>
+    <div>📍 ${app.Centro}</div>
     <div>🆔 ${app.PIN}</div>
     ${notifica?'<div style="grid-column:1/-1;">📧 Notifica inviata ✓</div>':''}
   </div>
   ${userPIN===PIN_MASTER?`<button class="btn btn-confirm" onclick="mostraModalModifica('${app.PIN}', '${formatDateForAPI(app.Data)}', '${app.Ora}')" style="margin-top:10px;">✏️ Modifica</button>`:''}
   ${app.Conferma_appuntamento==='TRUE'?'<div style="margin-top:10px;padding:8px;background:#E3F2FD;border-radius:8px;font-size:12px;color:#1976D2;">✓ Confermato</div>':''}
 </div>`;
+    });
+  }
+  document.getElementById('adminContent').innerHTML=html;
+  }
+
 function renderMonthView(data){if(!window.currentMonth){window.currentMonth=new Date()}const year=window.currentMonth.getFullYear();const month=window.currentMonth.getMonth();const firstDay=new Date(year,month,1);const lastDay=new Date(year,month+1,0);const daysInMonth=lastDay.getDate();const startDay=firstDay.getDay();let html=`<div class="calendar-nav"><button class="nav-btn" onclick="changeMonth(-1)">← Prec</button><h3>${firstDay.toLocaleDateString('it-IT',{month:'long',year:'numeric'})}</h3><button class="nav-btn" onclick="changeMonth(1)">Succ →</button></div><div class="calendar-month"><div class="calendar-header">`;['Dom','Lun','Mar','Mer','Gio','Ven','Sab'].forEach(d=>html+=`<div>${d}</div>`);html+='</div><div class="calendar-days">';for(let i=0;i<startDay;i++)html+='<div class="calendar-day empty"></div>';const today=new Date();for(let day=1;day<=daysInMonth;day++){const date=new Date(year,month,day);const dateStr=`${String(day).padStart(2,'0')}/${String(month+1).padStart(2,'0')}/${year}`;const apps=data.filter(r=>formatDateSimple(r.Data)===dateStr);const isToday=day===today.getDate()&&month===today.getMonth()&&year===today.getFullYear();html+=`<div class="calendar-day ${isToday?'today':''}"><div class="day-number">${day}</div>`;apps.sort((a,b)=>(a.Ora||'00:00').localeCompare(b.Ora||'00:00')).forEach(a=>{const color={'Programmata':'yellow','Confermata':'blue','Svolta':'green','Annullata':'red'}[a.Stato_visita||'Programmata']||'yellow';html+=`<div class="cal-event ${color}">${a.Ora} ${a.Nome} ${a.Cognome}</div>`});html+='</div>'}html+='</div></div>';document.getElementById('adminContent').innerHTML=html}
 function changeMonth(dir){window.currentMonth.setMonth(window.currentMonth.getMonth()+dir);renderAdminView('month')}
 function renderWeekView(data){if(!window.currentWeekStart){window.currentWeekStart=new Date();window.currentWeekStart.setDate(window.currentWeekStart.getDate()-window.currentWeekStart.getDay()+1)}const startOfWeek=new Date(window.currentWeekStart);const endOfWeek=new Date(startOfWeek);endOfWeek.setDate(endOfWeek.getDate()+6);let html=`<div class="calendar-nav"><button class="nav-btn" onclick="changeWeek(-1)">← Prec</button><h3>Settimana ${startOfWeek.toLocaleDateString('it-IT',{day:'numeric',month:'short'})} - ${endOfWeek.toLocaleDateString('it-IT',{day:'numeric',month:'short'})}</h3><button class="nav-btn" onclick="changeWeek(1)">Succ →</button></div><div class="calendar-week">`;const today=new Date();for(let i=0;i<7;i++){const day=new Date(startOfWeek);day.setDate(startOfWeek.getDate()+i);const dateStr=formatDateSimple2(day);const apps=data.filter(r=>formatDateSimple(r.Data)===dateStr);const isToday=day.toDateString()===today.toDateString();html+=`<div class="week-day ${isToday?'today':''}"><div class="week-day-header">${day.toLocaleDateString('it-IT',{weekday:'short',day:'numeric',month:'short'})}</div>`;apps.sort((a,b)=>a.Ora.localeCompare(b.Ora)).forEach(a=>{const color={'Programmata':'yellow','Confermata':'blue','Svolta':'green','Annullata':'red'}[a.Stato_visita||'Programmata']||'yellow';const notifica=(a.Notifica_inviata==='TRUE'||a.Notifica_inviata===true)?' ✓':'';html+=`<div class="week-event ${color}">${a.Ora} ${a.Nome} ${a.Cognome}${notifica}</div>`});html+='</div>'}html+='</div>';document.getElementById('adminContent').innerHTML=html}
