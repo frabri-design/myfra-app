@@ -206,7 +206,7 @@ function parseDate(d){if(!d)return new Date(0);const p=d.split('/');return p.len
 function formatDate(d){return parseDate(d).toLocaleDateString('it-IT',{weekday:'long',day:'numeric',month:'long',year:'numeric'})}
 function formatDateSimple(d){const date=parseDate(d);return`${String(date.getDate()).padStart(2,'0')}/${String(date.getMonth()+1).padStart(2,'0')}/${date.getFullYear()}`}
 function formatDateSimple2(d){return`${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}/${d.getFullYear()}`}
-const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwDQ3vMzR3TVivK-imwdG6-ZJ3Inl3GF-yFYyvPvk51i7OoZVWUK_tw8OZuhpey3Ve_lQ/exec";
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzoCyBtLw6ayGOIoFVL2IkRuL4R18cbyYHM8YV4Yh866EEd4GveHsdv0ZYzt_cGYl3Vjg/exec";
 
 async function confirm(date) {
   const btn = event.target;
