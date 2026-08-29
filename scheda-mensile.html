@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scheda Mensile MyFra</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant:wght@400;600&family=Lato:wght@300;400&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        @media print {
+            body { margin: 0; padding: 0; }
+            .no-print { display: none !important; }
+            @page { size: A4; margin: 0; }
+        }
+        body {
+            font-family: 'Lato', sans-serif;
+            background: #f5f5f5;
+            color: #0F1A33;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        .no-print {
+            position: fixed; top: 20px; right: 20px;
+            background: #E8B49A; color: #0F1A33; border: none;
+            padding: 15px 25px; border-radius: 10px; font-size: 15px;
+            font-weight: 600; cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1); z-index: 1000;
+        }
+        .page {
+            width: 210mm; min-height: 297mm; padding: 20mm;
+            margin: 20px auto; background: white;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .header { text-align: center; margin-bottom: 15px; border-bottom: 1px solid #0F1A33; padding-bottom: 15px; }
+        .header h1 { font-family: 'Cormorant', serif; font-size: 28px; color: #0F1A33; margin-bottom: 5px; font-weight: 600; }
+        .header h2 { font-family: 'Cormorant', serif; font-size: 18px; color: #0F1A33; margin-bottom: 8px; font-weight: 400; }
+        .header .name-title { font-size: 14px; margin-bottom: 2px; font-style: italic; }
+        .header .profession { font-size: 12px; font-weight: 300; margin-bottom: 8px; }
+        .header .subtitle { font-size: 11px; color: #0F1A33; margin-top: 8px; font-style: italic; font-weight: 300; }
+        .section { margin-bottom: 16px; }
+        .section-title { font-family: 'Cormorant', serif; font-size: 16px; color: #0F1A33; margin-bottom: 6px; font-weight: 600; }
+        .box { background: rgba(232,180,154,0.1); border: 1px solid rgba(232,180,154,0.3); border-radius: 10px; padding: 12px; margin-bottom: 10px; }
+        .box-light { background: rgba(232,180,154,0.05); border-radius: 8px; padding: 10px; margin-bottom: 8px; }
+        .measurements { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 11px; }
+        .measurements label { display: block; margin-bottom: 3px; }
+        .measurement-line { width: 100%; border: none; border-bottom: 1px solid rgba(15,26,51,0.3); height: 20px; display: block; }
+        .checkbox { width: 13px; height: 13px; border: 1px solid #0F1A33; display: inline-block; margin-right: 4px; vertical-align: middle; border-radius: 2px; }
+        .checkbox-group { display: flex; gap: 15px; font-size: 11px; margin-top: 5px; flex-wrap: wrap; }
+        .mini-boxes { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+        .mini-box { background: rgba(232,180,154,0.08); border-radius: 8px; padding: 10px; font-size: 11px; }
+        .mini-box-title { font-weight: 600; margin-bottom: 5px; color: #0F1A33; }
+        .textarea-field { width: 100%; border: 1px solid rgba(15,26,51,0.2); border-radius: 5px; padding: 8px; min-height: 52px; background: white; font-family: 'Lato', sans-serif; font-size: 11px; color: #0F1A33; resize: vertical; }
+        .input-field { width: 100%; border: none; border-bottom: 1px solid rgba(15,26,51,0.3); background: transparent; padding: 3px 0; font-size: 11px; font-family: 'Lato', sans-serif; color: #0F1A33; margin-top: 5px; }
+        .inline-field { width: 50px; border: none; border-bottom: 1px solid rgba(15,26,51,0.3); background: transparent; font-size: 11px; font-family: 'Lato', sans-serif; color: #0F1A33; }
+        .italic-note-top { font-style: italic; font-size: 10px; color: #0F1A33; margin-bottom: 6px; opacity: 0.8; }
+        .highlight-box { background: rgba(232,180,154,0.15); border-left: 3px solid #E8B49A; border-radius: 8px; padding: 14px; font-size: 11px; text-align: center; line-height: 1.7; margin-bottom: 14px; }
+        .vittorie-box { background: rgba(232,180,154,0.13); border: 1px solid rgba(232,180,154,0.4); border-radius: 10px; padding: 12px; margin-top: 10px; }
+        .vittorie-title { font-family: 'Cormorant', serif; font-size: 15px; color: #0F1A33; font-weight: 600; margin-bottom: 3px; }
+        .vittorie-sub { font-style: italic; font-size: 10px; opacity: 0.75; margin-bottom: 8px; }
+        .footer { text-align: center; font-size: 10px; color: #0F1A33; border-top: 1px solid rgba(15,26,51,0.2); padding-top: 8px; margin-top: 18px; opacity: 0.7; }
+
+        /* Checkbox interattive */
+        .cb-label { display: flex; align-items: center; gap: 5px; cursor: pointer; font-size: 11px; }
+        .cb-label input[type="checkbox"] { width: 13px; height: 13px; accent-color: #E8B49A; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <button class="no-print" onclick="inviaWhatsApp()">📱 Invia alla dottoressa Francesca</button>
+
+    <div class="page" id="scheda">
+        <div class="header">
+            <h1>Metodo MyFra</h1>
+            <h2>Nutrizione, consapevolezza, continuità</h2>
+            <div class="name-title">Dott.ssa Francesca Briscia</div>
+            <div class="profession">Biologa nutrizionista</div>
+            <div class="subtitle">Un riepilogo mensile delle tue abitudini.<br>Non per giudicarti, ma per aiutarti a capire.</div>
+        </div>
+
+        <!-- DATA + NOME -->
+        <div class="box-light" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; font-size:11px; margin-bottom:15px;">
+            <div style="display:flex; align-items:center; gap:8px;">
+                <span>Nome:</span>
+                <input class="input-field" id="nome" style="width:160px; margin-top:0;" type="text" placeholder="Nome paziente">
+            </div>
+            <div style="display:flex; align-items:center; gap:8px;">
+                <span>Mese dal:</span>
+                <input class="input-field" id="dal" style="width:80px; margin-top:0;" type="text">
+                <span>al:</span>
+                <input class="input-field" id="al" style="width:80px; margin-top:0;" type="text">
+            </div>
+        </div>
+
+        <!-- CORPO & MISURE -->
+        <div class="section">
+            <div class="section-title">⚖️ CORPO & MISURE</div>
+            <div class="italic-note-top">Solo se lo desideri</div>
+            <div class="box">
+                <div class="measurements">
+                    <div><label>Peso (kg):</label><input class="input-field" id="peso" type="text"></div>
+                    <div><label>Girovita (cm):</label><input class="input-field" id="girovita" type="text"></div>
+                    <div><label>Addome (cm):</label><input class="input-field" id="addome" type="text"></div>
+                    <div><label>Fianchi (cm):</label><input class="input-field" id="fianchi" type="text"></div>
+                    <div style="grid-column:1/-1"><label>Altre misure:</label><input class="input-field" id="altremisure" type="text"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- FRUTTA & VERDURA -->
+        <div class="section">
+            <div class="section-title">🍎🥦 FRUTTA & VERDURA</div>
+            <div class="box">
+                <div class="italic-note-top">Questo mese ho consumato:</div>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+                    <div style="font-size:11px;">
+                        <strong style="display:block; margin-bottom:5px;">🍎 Frutta</strong>
+                        <label class="cb-label"><input type="checkbox" id="frutta1"> poco</label>
+                        <label class="cb-label"><input type="checkbox" id="frutta2"> abbastanza</label>
+                        <label class="cb-label"><input type="checkbox" id="frutta3"> con regolarità</label>
+                    </div>
+                    <div style="font-size:11px;">
+                        <strong style="display:block; margin-bottom:5px;">🥦 Verdura</strong>
+                        <label class="cb-label"><input type="checkbox" id="verd1"> poco</label>
+                        <label class="cb-label"><input type="checkbox" id="verd2"> abbastanza</label>
+                        <label class="cb-label"><input type="checkbox" id="verd3"> con regolarità</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MOVIMENTO -->
+        <div class="section">
+            <div class="section-title">🏃 MOVIMENTO</div>
+            <div class="italic-note-top">Anche poco è sempre meglio di niente.</div>
+            <div class="box">
+                <div style="font-size:11px; margin-bottom:8px;">
+                    <label>Che tipo di movimento ho fatto questo mese? Quante ore settimanali?</label>
+                    <input class="input-field" id="movimento1" type="text">
+                </div>
+                <div style="font-size:11px;">
+                    <label>Come mi sono sentito/a durante e dopo?</label>
+                    <input class="input-field" id="movimento2" type="text">
+                </div>
+            </div>
+        </div>
+
+        <!-- STATO GENERALE -->
+        <div class="section">
+            <div class="section-title">✨ STATO GENERALE</div>
+
+            <div class="mini-boxes">
+                <div class="mini-box">
+                    <div class="mini-box-title">💧 Idratazione</div>
+                    <label class="cb-label"><input type="checkbox" id="idro1"> insufficiente &lt; 1 L</label>
+                    <label class="cb-label"><input type="checkbox" id="idro2"> adeguata 1–1,5 L</label>
+                    <label class="cb-label"><input type="checkbox" id="idro3"> buona 1,5–2 L</label>
+                </div>
+                <div class="mini-box">
+                    <div class="mini-box-title">😴 Sonno</div>
+                    <div style="margin-bottom:5px; font-size:11px;">Ore (media): <input class="inline-field" id="sonnoore" type="text"></div>
+                    <div style="font-weight:600; font-size:10px; margin-bottom:3px;">Qualità:</div>
+                    <label class="cb-label"><input type="checkbox" id="sonno1"> Scarsa</label>
+                    <label class="cb-label"><input type="checkbox" id="sonno2"> Discontinua</label>
+                    <label class="cb-label"><input type="checkbox" id="sonno3"> Buona</label>
+                    <label class="cb-label"><input type="checkbox" id="sonno4"> Profonda</label>
+                </div>
+            </div>
+
+            <div class="mini-boxes">
+                <div class="mini-box">
+                    <div class="mini-box-title">⚡ Energia</div>
+                    <label class="cb-label"><input type="checkbox" id="en1"> bassa</label>
+                    <label class="cb-label"><input type="checkbox" id="en2"> variabile</label>
+                    <label class="cb-label"><input type="checkbox" id="en3"> buona</label>
+                </div>
+                <div class="mini-box">
+                    <div class="mini-box-title">😊 Umore</div>
+                    <label class="cb-label"><input type="checkbox" id="um1"> giù</label>
+                    <label class="cb-label"><input type="checkbox" id="um2"> altalenante</label>
+                    <label class="cb-label"><input type="checkbox" id="um3"> stabile</label>
+                </div>
+            </div>
+
+            <div class="mini-boxes">
+                <div class="mini-box">
+                    <div class="mini-box-title">🌀 Equilibrio intestinale</div>
+                    <label class="cb-label"><input type="checkbox" id="int1"> regolare</label>
+                    <label class="cb-label"><input type="checkbox" id="int2"> pigro / stipsi</label>
+                    <label class="cb-label"><input type="checkbox" id="int3"> troppo frequente</label>
+                </div>
+                <div class="mini-box">
+                    <div class="mini-box-title">🔥 Benessere digestivo</div>
+                    <label class="cb-label"><input type="checkbox" id="dig1"> regolare e leggero</label>
+                    <label class="cb-label"><input type="checkbox" id="dig2"> gonfiore e cattiva digestione</label>
+                    <label class="cb-label"><input type="checkbox" id="dig3"> bruciore e reflusso</label>
+                </div>
+            </div>
+        </div>
+
+        <!-- STIMOLANTI & ALCOL -->
+        <div class="section">
+            <div class="section-title">☕🍷 STIMOLANTI & ALCOL</div>
+            <div class="italic-note-top">Senza sensi di colpa, solo consapevolezza.</div>
+            <div class="box">
+                <div style="margin-bottom:10px; font-size:11px;">
+                    <div style="font-weight:600; margin-bottom:5px;">☕ Caffè al giorno (media):</div>
+                    <div style="display:flex; gap:15px; flex-wrap:wrap;">
+                        <label class="cb-label"><input type="checkbox" id="caff0"> 0</label>
+                        <label class="cb-label"><input type="checkbox" id="caff1"> 1</label>
+                        <label class="cb-label"><input type="checkbox" id="caff2"> 2</label>
+                        <label class="cb-label"><input type="checkbox" id="caff3"> 3 o più</label>
+                    </div>
+                </div>
+                <div style="font-size:11px;">
+                    <div style="font-weight:600; margin-bottom:5px;">🍷 Alcol:</div>
+                    <div style="display:flex; gap:15px; flex-wrap:wrap;">
+                        <label class="cb-label"><input type="checkbox" id="alc1"> No</label>
+                        <label class="cb-label"><input type="checkbox" id="alc2"> Occasionale</label>
+                        <label class="cb-label"><input type="checkbox" id="alc3"> Frequente</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SINTOMI -->
+        <div class="section">
+            <div class="section-title">🩺 SINTOMI</div>
+            <div class="italic-note-top">Es. dolori articolari, mal di testa, stanchezza cronica, altro</div>
+            <div class="box">
+                <textarea class="textarea-field" id="sintomi" placeholder="Scrivi qui..."></textarea>
+            </div>
+        </div>
+
+        <!-- CONSAPEVOLEZZA -->
+        <div class="section">
+            <div class="section-title">✨ CONSAPEVOLEZZA</div>
+            <div class="italic-note-top">Scrivi quello che senti, non solo quello che mangi.</div>
+            <div class="box">
+                <div style="font-size:11px; margin-bottom:5px; font-weight:600;">Una difficoltà che ho incontrato:</div>
+                <textarea class="textarea-field" id="difficolta" placeholder="Scrivi qui..."></textarea>
+
+                <div style="font-size:11px; margin-bottom:5px; font-weight:600; margin-top:10px;">Una cosa che ho fatto per me in questo mese:</div>
+                <textarea class="textarea-field" id="cosafatta" placeholder="Scrivi qui..."></textarea>
+
+                <div class="vittorie-box">
+                    <div class="vittorie-title">🏆 LE MIE VITTORIE</div>
+                    <div class="vittorie-sub">I miglioramenti che ho percepito, anche se piccoli.</div>
+                    <textarea class="textarea-field" id="vittorie" placeholder="Scrivi qui..."></textarea>
+                </div>
+            </div>
+        </div>
+
+        <!-- NOTA MYFRA -->
+        <div class="section">
+            <div class="highlight-box">
+                <strong>🌱 Nota MyFra</strong> — Non serve fare tutto perfetto. Serve continuare.<br>
+                Ogni mese che dedichi all'ascolto di te è un passo verso il cambiamento che cerchi.
+            </div>
+            <div class="highlight-box" style="background:white; border-left:none; border:1px solid rgba(232,180,154,0.3); font-style:italic; text-align:left;">
+                Se ti fa piacere, compila digitalmente questa scheda e inviamela su WhatsApp il giorno prima del nostro prossimo appuntamento, così potremo valutare insieme i tuoi cambiamenti. 🌿
+            </div>
+        </div>
+
+        <div class="footer">Tutti i diritti riservati © 2026 Dott.ssa Francesca Briscia</div>
+    </div>
+
+    <script>
+        function inviaWhatsApp() {
+            const nome = document.getElementById('nome').value || '(non indicato)';
+            const dal = document.getElementById('dal').value || '___';
+            const al = document.getElementById('al').value || '___';
+            const peso = document.getElementById('peso').value;
+            const girovita = document.getElementById('girovita').value;
+            const addome = document.getElementById('addome').value;
+            const fianchi = document.getElementById('fianchi').value;
+            const altremisure = document.getElementById('altremisure').value;
+
+            const getChecked = (ids, labels) => {
+                const sel = ids.map((id, i) => document.getElementById(id).checked ? labels[i] : null).filter(Boolean);
+                return sel.length ? sel.join(', ') : '—';
+            };
+
+            const frutta = getChecked(['frutta1','frutta2','frutta3'], ['poco','abbastanza','con regolarità']);
+            const verdura = getChecked(['verd1','verd2','verd3'], ['poco','abbastanza','con regolarità']);
+            const mov1 = document.getElementById('movimento1').value || '—';
+            const mov2 = document.getElementById('movimento2').value || '—';
+            const idro = getChecked(['idro1','idro2','idro3'], ['insufficiente < 1L','adeguata 1-1,5L','buona 1,5-2L']);
+            const sonnoore = document.getElementById('sonnoore').value || '—';
+            const sonnoq = getChecked(['sonno1','sonno2','sonno3','sonno4'], ['scarsa','discontinua','buona','profonda']);
+            const energia = getChecked(['en1','en2','en3'], ['bassa','variabile','buona']);
+            const umore = getChecked(['um1','um2','um3'], ['giù','altalenante','stabile']);
+            const intestino = getChecked(['int1','int2','int3'], ['regolare','pigro/stipsi','troppo frequente']);
+            const digestivo = getChecked(['dig1','dig2','dig3'], ['regolare e leggero','gonfiore e cattiva digestione','bruciore e reflusso']);
+            const caffe = getChecked(['caff0','caff1','caff2','caff3'], ['0','1','2','3 o più']);
+            const alcol = getChecked(['alc1','alc2','alc3'], ['no','occasionale','frequente']);
+            const sintomi = document.getElementById('sintomi').value || '—';
+            const difficolta = document.getElementById('difficolta').value || '—';
+            const cosafatta = document.getElementById('cosafatta').value || '—';
+            const vittorie = document.getElementById('vittorie').value || '—';
+
+            const msg =
+`🌿 *SCHEDA MENSILE MYFRA*
+*Paziente:* ${nome}
+*Mese:* dal ${dal} al ${al}
+
+⚖️ *CORPO & MISURE*
+Peso: ${peso || '—'} | Girovita: ${girovita || '—'} | Addome: ${addome || '—'} | Fianchi: ${fianchi || '—'}
+${altremisure ? 'Altre misure: ' + altremisure : ''}
+
+🍎 *FRUTTA & VERDURA*
+Frutta: ${frutta}
+Verdura: ${verdura}
+
+🏃 *MOVIMENTO*
+Tipo/ore: ${mov1}
+Come mi sono sentito/a: ${mov2}
+
+✨ *STATO GENERALE*
+💧 Idratazione: ${idro}
+😴 Sonno: ${sonnoore} ore | Qualità: ${sonnoq}
+⚡ Energia: ${energia}
+😊 Umore: ${umore}
+🌀 Equilibrio intestinale: ${intestino}
+🔥 Benessere digestivo: ${digestivo}
+
+☕ *STIMOLANTI & ALCOL*
+Caffè: ${caffe} | Alcol: ${alcol}
+
+🩺 *SINTOMI*
+${sintomi}
+
+✨ *CONSAPEVOLEZZA*
+Difficoltà: ${difficolta}
+Una cosa per me: ${cosafatta}
+
+🏆 *LE MIE VITTORIE*
+${vittorie}`;
+
+            const numero = '393349174413';
+            const url = `https://wa.me/${numero}?text=${encodeURIComponent(msg)}`;
+            window.open(url, '_blank');
+        }
+    </script>
+</body>
+</html>
